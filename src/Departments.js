@@ -7,7 +7,7 @@ const Departments = ({employees, departments, deleteEmployee, unassignDept}) => 
   })
   return (
     <div className='departments-container'>
-      <DepartmentList department='none' employees={noDepartmentEmployees} key='noDepartment' />
+      <DepartmentList department='none' employees={noDepartmentEmployees} deleteEmployee={deleteEmployee} key='noDepartment' />
       {departments.map(department => {
         const filteredEmployees = employees.filter(employee => {
           return employee.departmentId === department.id;
