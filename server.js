@@ -23,9 +23,49 @@ app.get('/api/departments', async(req, res, next) => {
     const departments = await Department.findAll();
     res.send(departments);
   } catch (err) {
-    next(err)
+    next(err);
   }
 });
+
+app.put('/api/employees/:id', async(req, res, next) => {
+  try {
+    const employee = await Employee.findByPk(req.params.id);
+    await employee.update(req.body);
+    res.send(employee);
+  } catch (error) {
+    next(err);
+  }
+})
+
+app.delete('/api/employees/:id', async(req, res, next) => {
+  try {
+    await Employee.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+})
+
+app.use((req, res, next) => {
+  const error = Error(`Page not found(${req.url})`);
+  error.status = 404;
+  next(error);
+})
+
+app.use((err, req, res, next) => {
+  console.log(err, err.stack);
+  res.status(err.status || 500).send(`
+  <html>
+    <body>
+      <h1>${err}</h1>
+      <p>${err.stack}</p>
+    </body>
+  </html>`)
+})
 
 const port = process.env.PORT || 5055;
 
