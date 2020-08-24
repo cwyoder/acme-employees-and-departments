@@ -3,6 +3,7 @@ const db = require('./db');
 const express = require('express');
 const app = express();
 const { Employee, Department } = db.models;
+const faker = require('faker');
 
 app.use(require('body-parser').json());
 
@@ -18,6 +19,14 @@ app.get('/api/employees', async(req, res, next) => {
   }
 });
 
+app.post('/api/employees', async(req, res, next) => {
+  try {
+    res.send(await Employee.create({name: faker.name.firstName(), departmentId: null}));
+  } catch (err) {
+    next(err);
+  }
+})
+
 app.get('/api/departments', async(req, res, next) => {
   try {
     const departments = await Department.findAll();
@@ -26,6 +35,15 @@ app.get('/api/departments', async(req, res, next) => {
     next(err);
   }
 });
+
+app.post('/api/departments', async(req, res, next) => {
+  try {
+    res.send(await Department.create({name: faker.commerce.department()}));
+  } catch (err) {
+    next(err);
+  }
+})
+
 
 app.put('/api/employees/:id', async(req, res, next) => {
   try {
@@ -37,9 +55,23 @@ app.put('/api/employees/:id', async(req, res, next) => {
   }
 })
 
+
 app.delete('/api/employees/:id', async(req, res, next) => {
   try {
     await Employee.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+})
+
+app.delete('/api/departments/:id', async(req, res, next) => {
+  try {
+    await Department.destroy({
       where: {
         id: req.params.id
       }

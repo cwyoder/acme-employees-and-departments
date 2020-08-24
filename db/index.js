@@ -13,7 +13,7 @@ const Employee = conn.define('employee', {
 const Department = conn.define('department', {
   name:{
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: false
   }
 })
 
